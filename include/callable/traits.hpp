@@ -2,6 +2,7 @@
 #ifndef CB604BL_CXX11_THINGS_CALLABLE_TRAITS_HPP
 #define CB604BL_CXX11_THINGS_CALLABLE_TRAITS_HPP
 
+#include "callable/arg_tuple.hpp"
 #include "callable/has_unoverloaded_operator.hpp"
 #include "callable/t_tags.hpp"
 #include "configs/namespace_macro.h"
@@ -15,7 +16,7 @@ template<typename... Ts>
 struct callable_traits
 {
 	static_assert(
-		detail::always_false<Ts...>::value,
+		always_false<Ts...>::value,
 		"cb604bl::cxx11::callable_traits: Bro, how the hell did you match up with the master template?"
 	);
 };
@@ -24,6 +25,7 @@ struct callable_traits
 template<typename Ret, typename... Args>
 struct callable_traits<Ret(Args...)>
 {
+	//category
 	static constexpr bool is_c_style_variadic_function = false;
 	static constexpr bool is_pointer_to_function = false;
 	static constexpr bool is_pointer_to_member_function = false;
@@ -34,9 +36,20 @@ struct callable_traits<Ret(Args...)>
 	static constexpr bool is_ref_qualified = false;
 	static constexpr bool is_lvalue_ref_qualified = false;
 	static constexpr bool is_rvalue_ref_qualified = false;
+	
+	using fixed_arg_types = arg_tuple<Args...>;
 
-	static constexpr std::size_t fixed_arg_count = sizeof...(Args);
+	static constexpr std::size_t fixed_arg_count = fixed_arg_types::size;
+
+	template<std::size_t index>
+	using arg_type_at = typename fixed_arg_types::template get_type_at<index>::type;
+
 	using return_type = Ret;
+
+	//The void here is a sentinel type
+	//meaning there's no class type
+	//This attribute is reserved for member function pointers
+	using class_type = void;
 };
 
 /*For abominable function type*/
@@ -238,6 +251,7 @@ struct callable_traits<Ret(T::*)(Args...)>
 	: callable_traits<Ret(Args...)>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 //only-cv qualified
@@ -246,6 +260,7 @@ struct callable_traits<Ret(T::*)(Args...) const>
 	: callable_traits<Ret(Args...) const>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -253,6 +268,7 @@ struct callable_traits<Ret(T::*)(Args...) volatile>
 	: callable_traits<Ret(Args...) volatile>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -260,6 +276,7 @@ struct callable_traits<Ret(T::*)(Args...) const volatile>
 	: callable_traits<Ret(Args...) const volatile>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 //lvalue-ref qualified
@@ -268,6 +285,7 @@ struct callable_traits<Ret(T::*)(Args...) &>
 	: callable_traits<Ret(Args...) &>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -275,6 +293,7 @@ struct callable_traits<Ret(T::*)(Args...) const &>
 	: callable_traits<Ret(Args...) const &>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -282,6 +301,7 @@ struct callable_traits<Ret(T::*)(Args...) volatile &>
 	: callable_traits<Ret(Args...) volatile &>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -289,6 +309,7 @@ struct callable_traits<Ret(T::*)(Args...) const volatile &>
 	: callable_traits<Ret(Args...) const volatile &>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 //rvalue-ref qualified
@@ -297,6 +318,7 @@ struct callable_traits<Ret(T::*)(Args...) &&>
 	: callable_traits<Ret(Args...) &&>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -304,6 +326,7 @@ struct callable_traits<Ret(T::*)(Args...) const &&>
 	: callable_traits<Ret(Args...) const &&>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -311,6 +334,7 @@ struct callable_traits<Ret(T::*)(Args...) volatile &&>
 	: callable_traits<Ret(Args...) volatile &&>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 template<typename T, typename Ret, typename... Args>
@@ -318,6 +342,7 @@ struct callable_traits<Ret(T::*)(Args...) const volatile &&>
 	: callable_traits<Ret(Args...) const volatile &&>
 {
 	static constexpr bool is_pointer_to_member_function = true;
+	using class_type = T;
 };
 
 /*For c-style variadic pointer to member function type*/
@@ -409,45 +434,45 @@ struct callable_traits<Ret(T::*)(Args..., ...) const volatile &&>
 };
 
 /*For class types with operator() (functors, lambdas, etc.)*/
-template<typename T>
-struct callable_traits<T>
+template<typename F>
+struct callable_traits<F>
 	: callable_traits<
-		typename std::conditional<std::is_class<T>::value,
-			callable_tags::is_class_type, callable_tags::is_not_class_type
+		typename std::conditional<std::is_class<F>::value,
+			callable::is_class_type, callable::is_not_class_type
 		>::type,
-		T
+		F
 	>
 {};
 
-template<typename T>
-struct callable_traits<callable_tags::is_class_type, T>
+template<typename F>
+struct callable_traits<callable::is_class_type, F>
 	: callable_traits<
-		typename std::conditional<has_unoverloaded_operator<T>::value,
-			callable_tags::is_with_a_unique_operator, callable_tags::is_not_with_a_unique_operator
+		typename std::conditional<callable::has_unoverloaded_operator<F>::value,
+			callable::is_with_a_unique_operator, callable::is_not_with_a_unique_operator
 		>::type,
-		T
+		F
 	>
 {};
 
-template<typename T>
-struct callable_traits<callable_tags::is_not_class_type, T>
+template<typename F>
+struct callable_traits<callable::is_not_class_type, F>
 {
 	static_assert(
-		detail::always_false<T>::value,
+		always_false<F>::value,
 		"cb604bl::cxx11::callable_traits: T is not a callable type");
 };
 
-template<typename T>
-struct callable_traits<callable_tags::is_not_with_a_unique_operator, T>
+template<typename F>
+struct callable_traits<callable::is_not_with_a_unique_operator, F>
 {
 	static_assert(
-		detail::always_false<T>::value,
+		always_false<F>::value,
 		"cb604bl::cxx11::callable_traits: T is not a callable type with a unique operator()");
 };
 
-template<typename T>
-struct callable_traits<callable_tags::is_with_a_unique_operator, T>
-	: callable_traits<decltype(&T::operator())>
+template<typename F>
+struct callable_traits<callable::is_with_a_unique_operator, F>
+	: callable_traits<decltype(&F::operator())>
 {};
 
 CB604BL_CXX11_NAMESPACE_END

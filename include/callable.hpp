@@ -1,7 +1,0 @@
-//Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_HPP
-
-#include <callable/traits.hpp>
-
-#endif //CB604BL_CXX11_THINGS_CALLABLE_HPP

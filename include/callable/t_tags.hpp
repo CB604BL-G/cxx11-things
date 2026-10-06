@@ -6,7 +6,7 @@
 
 CB604BL_CXX11_NAMESPACE_START
 
-namespace callable_tags
+namespace callable
 {
 	struct is_not_class_type{};
 	struct is_class_type{};

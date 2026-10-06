@@ -11,22 +11,24 @@ CB604BL_CXX11_NAMESPACE_START
 //the template operator as a form of overloading
 
 //God bless me
-template<typename T>
-struct has_unoverloaded_operator
+namespace callable
 {
-private:
-	template<typename U>
-	static auto test(int) ->
-		decltype(&U::operator(),
-		std::true_type{});
+	template<typename T>
+	struct has_unoverloaded_operator
+	{
+	private:
+		template<typename U>
+		static auto test(int) ->
+			decltype(&U::operator(),
+			std::true_type{});
 
-	template<typename U>
-	static std::false_type test(...);
+		template<typename U>
+		static std::false_type test(...);
 
-public:
-	static constexpr bool value = decltype(test<T>(1))::value;
-};
-
+	public:
+		static constexpr bool value = decltype(test<T>(1))::value;
+	};
+}
 CB604BL_CXX11_NAMESPACE_END
 
 #endif //CB604BL_CXX11_THINGS_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP

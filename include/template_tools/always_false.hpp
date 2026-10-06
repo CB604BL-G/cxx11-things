@@ -6,14 +6,11 @@
 
 CB604BL_CXX11_NAMESPACE_START
 
-namespace detail
+template<typename... Ts>
+struct always_false
 {
-	template<typename... Ts>
-	struct always_false
-	{
-		static constexpr bool value = false;
-	};
-}
+	static constexpr bool value = false;
+};
 
 CB604BL_CXX11_NAMESPACE_END
 
