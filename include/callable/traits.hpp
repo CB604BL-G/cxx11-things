@@ -21,7 +21,7 @@ struct callable_traits
 	);
 };
 
-//For function type
+/*For base function type*/
 template<typename Ret, typename... Args>
 struct callable_traits<Ret(Args...)>
 {
@@ -474,6 +474,183 @@ template<typename F>
 struct callable_traits<callable::is_with_a_unique_operator, F>
 	: callable_traits<decltype(&F::operator())>
 {};
+
+/*The following are all out-of-class definitions*/
+/*For base function type*/
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_pointer_to_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_pointer_to_member_function;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_const_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_volatile_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_lvalue_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...)>::is_rvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr std::size_t callable_traits<Ret(Args...)>::fixed_arg_count;
+
+/*For abominable function type*/
+//only-cv qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const>::is_const_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) volatile>::is_volatile_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const volatile>::is_volatile_qualified;
+
+//lvalue-ref qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) &>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) &>::is_lvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const &>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const &>::is_lvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) volatile &>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) volatile &>::is_lvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const volatile &>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const volatile &>::is_lvalue_ref_qualified;
+
+//rvalue-ref qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) &&>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) &&>::is_rvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const &&>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const &&>::is_rvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) volatile &&>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) volatile &&>::is_rvalue_ref_qualified;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const volatile &&>::is_ref_qualified;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args...) const volatile &&>::is_rvalue_ref_qualified;
+
+/*For c-style variadic function type*/
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...)>::is_c_style_variadic_function;
+
+//only-cv qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) volatile>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const volatile>::is_c_style_variadic_function;
+
+//lvalue-ref qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) &>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const &>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) volatile &>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const volatile &>::is_c_style_variadic_function;
+
+//rvalue-ref qualified
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) &&>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const &&>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) volatile &&>::is_c_style_variadic_function;
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(Args..., ...) const volatile &&>::is_c_style_variadic_function;
+
+/*For pointer to function type*/
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(*)(Args...)>::is_pointer_to_function;
+
+template<typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(*)(Args..., ...)>::is_c_style_variadic_function;
+
+/*For pointer to member function type*/
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...)>::is_pointer_to_member_function;
+
+//only-cv qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) volatile>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const volatile>::is_pointer_to_member_function;
+
+//lvalue-ref qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) &>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const &>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) volatile &>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const volatile &>::is_pointer_to_member_function;
+
+//rvalue-ref qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) &&>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const &&>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) volatile &&>::is_pointer_to_member_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args...) const volatile &&>::is_pointer_to_member_function;
+
+/*For c-style variadic pointer to member function type*/
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...)>::is_c_style_variadic_function;
+
+//only-cv qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) volatile>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const volatile>::is_c_style_variadic_function;
+
+//lvalue-ref qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) &>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const &>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) volatile &>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const volatile &>::is_c_style_variadic_function;
+
+//rvalue-ref qualified
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) &&>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const &&>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) volatile &&>::is_c_style_variadic_function;
+template<typename T, typename Ret, typename... Args>
+constexpr bool callable_traits<Ret(T::*)(Args..., ...) const volatile &&>::is_c_style_variadic_function;
 
 CB604BL_CXX11_NAMESPACE_END
 

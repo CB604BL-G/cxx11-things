@@ -2,9 +2,9 @@
 #ifndef CB604BL_CXX11_THINGS_CALLABLE_IS_CALLABLE_HPP
 #define CB604BL_CXX11_THINGS_CALLABLE_IS_CALLABLE_HPP
 
+#include "callable/call_category.hpp"
 #include "configs/namespace_macro.h"
 #include <type_traits>
-#include <utility>
 
 CB604BL_CXX11_NAMESPACE_START
 
@@ -14,19 +14,19 @@ struct is_callable
 private:
 	template<typename F_T, typename... Args_T>
 	static auto test(int) ->
-		decltype(std::declval<F_T>()(std::declval<Args_T>()...),
+		decltype(callable::basic_call_category<F_T, Args_T...>(),
 		std::true_type{});
 
-	template<typename F_CO, typename Obj, typename... Args_CO>
+	template<typename F_O, typename... Args_O>
 	static auto test(int) ->
 		decltype(
-			(std::declval<Obj>().*std::declval<F_CO>())(std::declval<Args_CO>()...),
+			callable::pointer_to_member_call_by_object_category<F_O, Args_O...>(),
 			std::true_type{});
 
-	template<typename F_CP, typename Ptr, typename... Args_CP>
+	template<typename F_P, typename... Args_P>
 	static auto test(int) ->
 		decltype(
-			(std::declval<Ptr>()->*std::declval<F_CP>())(std::declval<Args_CP>()...),
+			callable::pointer_to_member_call_by_pointer_category<F_P, Args_P...>(),
 			std::true_type{});
 
 	template<typename F_U, typename... Args_U>
@@ -35,6 +35,9 @@ private:
 public:
 	static constexpr bool value = decltype(test<F, Args...>(1))::value;
 };
+
+template<typename F, typename... Args>
+constexpr bool is_callable<F, Args...>::value;
 
 CB604BL_CXX11_NAMESPACE_END
 

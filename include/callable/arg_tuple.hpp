@@ -53,6 +53,9 @@ public:
 	};
 };
 
+template<typename... Args>
+constexpr std::size_t arg_tuple<Args...>::size;
+
 CB604BL_CXX11_NAMESPACE_END
 
 #endif //CB604BL_CXX11_THINGS_CALLABLE_ARG_TUPLE_HPP

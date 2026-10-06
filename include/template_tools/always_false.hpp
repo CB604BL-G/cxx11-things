@@ -12,6 +12,9 @@ struct always_false
 	static constexpr bool value = false;
 };
 
+template<typename... Ts>
+constexpr bool always_false<Ts...>::value;
+
 CB604BL_CXX11_NAMESPACE_END
 
 #endif //CB604BL_CXX11_THINGS_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP

@@ -2,9 +2,9 @@
 #ifndef CB604BL_CXX11_THINGS_CALLABLE_CALL_RESULT_HPP
 #define CB604BL_CXX11_THINGS_CALLABLE_CALL_RESULT_HPP
 
+#include "callable/call_category.hpp"
 #include "callable/is_callable.hpp"
 #include "configs/namespace_macro.h"
-#include <utility>
 
 CB604BL_CXX11_NAMESPACE_START
 
@@ -20,15 +20,15 @@ namespace callable
 	private:
 		template<typename F_T, typename... Args_T>
 		static auto test() ->
-			decltype(std::declval<F_T>()(std::declval<Args_T>()...));
+			decltype(basic_call_category<F_T, Args_T...>());
 
-		template<typename F_CO, typename Obj, typename... Args_CO>
+		template<typename F_O, typename... Args_O>
 		static auto test() ->
-			decltype((std::declval<Obj>().*std::declval<F_CO>())(std::declval<Args_CO>()...));
+			decltype(pointer_to_member_call_by_object_category<F_O, Args_O...>());
 
-		template<typename F_CP, typename Ptr, typename... Args_CP>
+		template<typename F_P, typename... Args_P>
 		static auto test() ->
-			decltype((std::declval<Ptr>()->*std::declval<F_CP>())(std::declval<Args_CP>()...));
+			decltype(pointer_to_member_call_by_pointer_category<F_P, Args_P...>());
 
 	public:
 		using type = decltype(test<F, Args...>());

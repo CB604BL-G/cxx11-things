@@ -18,7 +18,8 @@ struct FuncType
 
 auto main() -> int
 {
-	const auto& i = cb604bl::cxx11::arg_tuple<int>::size;
-	printf("%lu\n", i);
-	static_assert(std::is_same<void, cb604bl::cxx11::callable_traits<decltype(func)>::class_type>::value, "");
+	auto foo = [&](){};
+	auto mem = &FuncType::operator();
+	//printf("%lu\n", i);
+	static_assert(std::is_same<void, cb604bl::cxx11::call_result<decltype(foo)>::type>::value, "");
 }

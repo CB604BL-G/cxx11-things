@@ -28,6 +28,9 @@ namespace callable
 	public:
 		static constexpr bool value = decltype(test<T>(1))::value;
 	};
+
+	template<typename T>
+	constexpr bool has_unoverloaded_operator<T>::value;
 }
 CB604BL_CXX11_NAMESPACE_END
 
