@@ -4,7 +4,7 @@
 
 #include "configs/namespace_macro.h"
 
-CB604BL_CXX11_NAMESPACE_START
+CB604BL_CXX11_NAMESPACE_START;
 
 template<typename... Ts>
 struct always_false
@@ -15,6 +15,6 @@ struct always_false
 template<typename... Ts>
 constexpr bool always_false<Ts...>::value;
 
-CB604BL_CXX11_NAMESPACE_END
+CB604BL_CXX11_NAMESPACE_END;
 
 #endif //CB604BL_CXX11_THINGS_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP

@@ -5,7 +5,7 @@
 #include "configs/namespace_macro.h"
 #include <cstddef>
 
-CB604BL_CXX11_NAMESPACE_START
+CB604BL_CXX11_NAMESPACE_START;
 
 template<typename... Args>
 class arg_tuple
@@ -43,7 +43,7 @@ public:
 	{
 		static_assert(
 			sizeof...(Args) != 0,
-			"cb604bl::cxx11::arg_tuple::get_type_at: There is no any parameter to get");
+			"cb604bl::cxx11::arg_tuple::get_type_at: There is no parameter to get");
 
 		static_assert(
 			index < sizeof...(Args),
@@ -56,6 +56,6 @@ public:
 template<typename... Args>
 constexpr std::size_t arg_tuple<Args...>::size;
 
-CB604BL_CXX11_NAMESPACE_END
+CB604BL_CXX11_NAMESPACE_END;
 
 #endif //CB604BL_CXX11_THINGS_CALLABLE_ARG_TUPLE_HPP

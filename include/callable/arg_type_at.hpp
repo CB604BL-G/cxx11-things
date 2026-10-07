@@ -6,11 +6,11 @@
 #include "configs/namespace_macro.h"
 #include <cstddef>
 
-CB604BL_CXX11_NAMESPACE_START
+CB604BL_CXX11_NAMESPACE_START;
 
 template<typename Callable, std::size_t index>
 using arg_type_at = typename callable_traits<Callable>::template arg_type_at<index>;
 
-CB604BL_CXX11_NAMESPACE_END
+CB604BL_CXX11_NAMESPACE_END;
 
 #endif //CB604BL_CXX11_THINGS_CALLABLE_ARG_TYPE_AT_HPP

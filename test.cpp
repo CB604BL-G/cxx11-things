@@ -1,25 +1,23 @@
-#include "callable/arg_tuple.hpp"
-#include "callable/call_result.hpp"
+#include "callable/call.hpp"
 #include "callable/is_callable.hpp"
 #include "callable/traits.hpp"
 #include <cstdio>
+#include <string>
 #include <type_traits>
-void func() {}
+#include <utility>
+
+void func() noexcept {}
 
 struct FuncType
 {
 
-	void operator()() const & noexcept;
-/*	{
-		
-	}*/
-	//void operator()() {};
+	void operator()() noexcept
+	{}
 };
 
 auto main() -> int
 {
-	auto foo = [&](){};
-	auto mem = &FuncType::operator();
-	//printf("%lu\n", i);
-	static_assert(std::is_same<void, cb604bl::cxx11::call_result<decltype(foo)>::type>::value, "");
+	auto foo = [](int) -> std::string {};
+	//auto i = cb604bl::cxx11::call(foo, 10);
+	//static_assert(cb604bl::cxx11::is_nothrow_callable<decltype(foo), int>::value, "");
 }
