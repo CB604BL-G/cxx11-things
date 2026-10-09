@@ -1,4 +1,4 @@
-local PREFIX = "CB604BL_CXX11_THINGS_"
+local PREFIX = "CEPO_"
 
 local function fail(msg)
 	io.stderr:write("error: " .. msg .. "\n")

@@ -1,8 +1,8 @@
 [
 {
-  "directory": "/data/data/com.termux/files/home/projects/cxx11-things/.build",
-  "command": "/data/data/com.termux/files/usr/bin/c++  -I/data/data/com.termux/files/home/projects/cxx11-things/include -O2 -g -DNDEBUG -std=c++11 -Wall -Wextra -Wpedantic -o CMakeFiles/test.dir/test.cpp.o -c /data/data/com.termux/files/home/projects/cxx11-things/test.cpp",
-  "file": "/data/data/com.termux/files/home/projects/cxx11-things/test.cpp",
+  "directory": "/data/data/com.termux/files/home/projects/cepo/.build",
+  "command": "/data/data/com.termux/files/usr/bin/c++  -I/data/data/com.termux/files/home/projects/cepo/include -O3 -DNDEBUG -std=c++11 -Wall -Wextra -Wpedantic -o CMakeFiles/test.dir/test.cpp.o -c /data/data/com.termux/files/home/projects/cepo/test.cpp",
+  "file": "/data/data/com.termux/files/home/projects/cepo/test.cpp",
   "output": "CMakeFiles/test.dir/test.cpp.o"
 }
 ]

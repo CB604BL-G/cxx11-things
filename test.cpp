@@ -1,10 +1,10 @@
-#include "callable/call.hpp"
 #include "callable/is_callable.hpp"
 #include "callable/traits.hpp"
 #include <cstdio>
 #include <string>
 #include <type_traits>
 #include <utility>
+#include <callable/call.hpp>
 
 void func() noexcept {}
 
@@ -12,12 +12,13 @@ struct FuncType
 {
 
 	void operator()() noexcept
-	{}
+	{
+		std::puts("123");
+	}
 };
 
 auto main() -> int
 {
-	auto foo = [](int) -> std::string {};
-	//auto i = cb604bl::cxx11::call(foo, 10);
-	//static_assert(cb604bl::cxx11::is_nothrow_callable<decltype(foo), int>::value, "");
+	cepo::call(func);
+	static_assert(cepo::is_nothrow_callable<decltype(func)>::value, "");
 }

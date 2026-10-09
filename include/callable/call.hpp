@@ -1,46 +1,73 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_CALL_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_CALL_HPP
+#ifndef CEPO_CALLABLE_CALL_HPP
+#define CEPO_CALLABLE_CALL_HPP
 
-#include "callable/call_result.hpp"
+#include "callable/call_category.hpp"
+#include "callable/is_callable.hpp"
 #include "configs/namespace_macro.h"
-#include <type_traits>
+#include "template_tools/always_false.hpp"
 #include <utility>
 
-CB604BL_CXX11_NAMESPACE_START;
+CEPO_NAMESPACE_START;
 
-namespace callable
-{
-	template<typename Ret, bool is_void_ret = std::is_void<Ret>::value>
-	struct is_void_return_type_impl {};
-
-	template<typename Ret>
-	struct is_void_return_type_impl<Ret, false>
-	{
-		using type = Ret;
-	};
-
-	template<typename T>
-	struct is_void_return_type
-		: is_void_return_type_impl<T>
-	{};
-}
-
-//Not finished
+//=== if return void ===//
 template<typename F, typename... Args>
-typename callable::is_void_return_type<typename call_result<F, Args...>::type>::type
-call(F&& f, Args&&... args)
-{
-	return std::forward<F>(f)(std::forward<Args>(args)...);
-}
-
-template<typename F, typename... Args>
-typename std::enable_if<std::is_void<typename call_result<F, Args...>::type>::value>::type
-call(F&& f, Args&&... args)
+inline auto call(F&& f, Args&&... args)
+	noexcept(is_nothrow_callable<F, Args...>::value)
+	-> typename callable::if_return_void_and_basic_call<F, Args...>::type
 {
 	std::forward<F>(f)(std::forward<Args>(args)...);
 }
 
-CB604BL_CXX11_NAMESPACE_END;
+template<typename F, typename Obj, typename... Args>
+inline auto call(F&& f, Obj&& obj, Args&&... args)
+	noexcept(is_nothrow_callable<F, Obj, Args...>::value)
+	-> typename callable::if_return_void_and_pointer_to_member_call_by_object<F, Obj, Args...>::type
+{
+	(std::forward<Obj>(obj).*std::forward<F>(f))(std::forward<Args>(args)...);
+}
 
-#endif //CB604BL_CXX11_THINGS_CALLABLE_CALL_HPP
+template<typename F, typename Ptr, typename... Args>
+inline auto call(F&& f, Ptr&& ptr, Args&&... args)
+	noexcept(is_nothrow_callable<F, Ptr, Args...>::value)
+	-> typename callable::if_return_void_and_pointer_to_member_call_by_pointer<F, Ptr, Args...>::type
+{
+	(std::forward<Ptr>(ptr)->*std::forward<F>(f))(std::forward<Args>(args)...);
+}
+
+//=== if not return void ===//
+template<typename F, typename... Args>
+inline auto call(F&& f, Args&&... args)
+	noexcept(is_nothrow_callable<F, Args...>::value)
+	-> typename callable::if_not_return_void_and_basic_call<F, Args...>::type
+{
+	return std::forward<F>(f)(std::forward<Args>(args)...);
+}
+
+template<typename F, typename Obj, typename... Args>
+inline auto call(F&& f, Obj&& obj, Args&&... args)
+	noexcept(is_nothrow_callable<F, Obj, Args...>::value)
+	-> typename callable::if_not_return_void_and_pointer_to_member_call_by_object<F, Obj, Args...>::type
+{
+	return (std::forward<Obj>(obj).*std::forward<F>(f))(std::forward<Args>(args)...);
+}
+
+template<typename F, typename Ptr, typename... Args>
+inline auto call(F&& f, Ptr&& ptr, Args&&... args)
+	noexcept(is_nothrow_callable<F, Ptr, Args...>::value)
+	-> typename callable::if_not_return_void_and_pointer_to_member_call_by_pointer<F, Ptr, Args...>::type
+{
+	return (std::forward<Ptr>(ptr)->*std::forward<F>(f))(std::forward<Args>(args)...);
+}
+
+//=== invalid call ===//
+template<typename F, typename... Args>
+inline auto call(F&&, Args&&...) noexcept
+	-> typename callable::if_invalid_call<F, Args...>::type
+{
+	static_assert(always_false<F, Args...>::value, "cepo::call: Invalid call");
+}
+
+CEPO_NAMESPACE_END;
+
+#endif //CEPO_CALLABLE_CALL_HPP

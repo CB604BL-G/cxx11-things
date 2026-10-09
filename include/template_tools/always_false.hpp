@@ -1,10 +1,10 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP
-#define CB604BL_CXX11_THINGS_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP
+#ifndef CEPO_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP
+#define CEPO_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP
 
 #include "configs/namespace_macro.h"
 
-CB604BL_CXX11_NAMESPACE_START;
+CEPO_NAMESPACE_START;
 
 template<typename... Ts>
 struct always_false
@@ -15,6 +15,6 @@ struct always_false
 template<typename... Ts>
 constexpr bool always_false<Ts...>::value;
 
-CB604BL_CXX11_NAMESPACE_END;
+CEPO_NAMESPACE_END;
 
-#endif //CB604BL_CXX11_THINGS_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP
+#endif //CEPO_TEMPLATE_TOOLS_ALWAYS_FALSE_HPP

@@ -1,6 +1,6 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_TRAITS_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_TRAITS_HPP
+#ifndef CEPO_CALLABLE_TRAITS_HPP
+#define CEPO_CALLABLE_TRAITS_HPP
 
 #include "callable/arg_tuple.hpp"
 #include "callable/has_unoverloaded_operator.hpp"
@@ -10,14 +10,14 @@
 #include <cstddef>
 #include <type_traits>
 
-CB604BL_CXX11_NAMESPACE_START
+CEPO_NAMESPACE_START
 
 template<typename... Ts>
 struct callable_traits
 {
 	static_assert(
 		always_false<Ts...>::value,
-		"cb604bl::cxx11::callable_traits: Bro, how the hell did you match up with the master template?"
+		"cepo::callable_traits: Bro, how the hell did you match up with the master template?"
 	);
 };
 
@@ -459,7 +459,7 @@ struct callable_traits<callable::is_not_class_type, F>
 {
 	static_assert(
 		always_false<F>::value,
-		"cb604bl::cxx11::callable_traits: T is not a callable type");
+		"cepo::callable_traits: T is not a callable type");
 };
 
 template<typename F>
@@ -467,7 +467,7 @@ struct callable_traits<callable::is_not_with_a_unique_operator, F>
 {
 	static_assert(
 		always_false<F>::value,
-		"cb604bl::cxx11::callable_traits: T is not a callable type with a unique operator()");
+		"cepo::callable_traits: T is not a callable type with a unique operator()");
 };
 
 template<typename F>
@@ -652,6 +652,6 @@ constexpr bool callable_traits<Ret(T::*)(Args..., ...) volatile &&>::is_c_style_
 template<typename T, typename Ret, typename... Args>
 constexpr bool callable_traits<Ret(T::*)(Args..., ...) const volatile &&>::is_c_style_variadic_function;
 
-CB604BL_CXX11_NAMESPACE_END
+CEPO_NAMESPACE_END
 
-#endif //CB604BL_CXX11_THINGS_CALLABLE_TRAITS_HPP
+#endif //CEPO_CALLABLE_TRAITS_HPP

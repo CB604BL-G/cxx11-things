@@ -1,22 +1,22 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_IS_CALLABLE_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_IS_CALLABLE_HPP
+#ifndef CEPO_CALLABLE_IS_CALLABLE_HPP
+#define CEPO_CALLABLE_IS_CALLABLE_HPP
 
-#include "callable/call_category.hpp"
+#include "callable/call_category_macros.hpp"
 #include "configs/namespace_macro.h"
 #include "template_tools/priority_tag.hpp"
 #include <type_traits>
 
-CB604BL_CXX11_NAMESPACE_START;
+CEPO_NAMESPACE_START;
 
 #define BASIC_CALL(F, Args) \
-	CB604BL_CXX11_CALLABLE_CALL_CATEGORY_EXPR_BASIC_CALL(F, Args)
+	CEPO_CALLABLE_CALL_CATEGORY_EXPR_BASIC_CALL(F, Args)
 
 #define POINTER_TO_MEMBER_CALL_BY_OBJECT(F, Obj, Args) \
-	CB604BL_CXX11_CALLABLE_CALL_CATEGORY_EXPR_POINTER_TO_MEMBER_CALL_BY_OBJECT(F, Obj, Args)
+	CEPO_CALLABLE_CALL_CATEGORY_EXPR_POINTER_TO_MEMBER_CALL_BY_OBJECT(F, Obj, Args)
 
 #define POINTER_TO_MEMBER_CALL_BY_POINTER(F, Ptr, Args) \
-	CB604BL_CXX11_CALLABLE_CALL_CATEGORY_EXPR_POINTER_TO_MEMBER_CALL_BY_POINTER(F, Ptr, Args)
+	CEPO_CALLABLE_CALL_CATEGORY_EXPR_POINTER_TO_MEMBER_CALL_BY_POINTER(F, Ptr, Args)
 
 template<typename F, typename... Args>
 struct is_callable
@@ -57,11 +57,15 @@ private:
 	template<typename...>
 	static std::false_type test(...);
 
-	//In C++11/14, noexcept is not part of the function type, so
-	//member function pointers and function pointers lose the
-	//noexcept information. Detection via those categories always
-	//yields false; only direct call expressions (functors, lambdas,
-	//named functions) can be reliably checked.
+	//True iff F is callable with Args... and the call is noexcept.
+
+	//C++11/14: noexcept is not part of the function type, so for function
+	//refs / function pointers / member-function pointers this reports false
+	//even when the target is noexcept. Only functors and lambdas are
+	//reliably detected. (Fixed in C++17.)
+
+	//false means "not nothrow-callable" — it does not distinguish
+	//"not callable" from "callable but throwing".
 
 public:
 	static constexpr bool value = decltype(test<F, Args...>(1))::value;
@@ -77,6 +81,6 @@ constexpr bool is_nothrow_callable<F, Args...>::value;
 #undef POINTER_TO_MEMBER_CALL_BY_OBJECT
 #undef POINTER_TO_MEMBER_CALL_BY_POINTER
 
-CB604BL_CXX11_NAMESPACE_END;
+CEPO_NAMESPACE_END;
 
-#endif //CB604BL_CXX11_THINGS_CALLABLE_IS_CALLABLE_HPP
+#endif //CEPO_CALLABLE_IS_CALLABLE_HPP

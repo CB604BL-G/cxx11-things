@@ -1,16 +1,14 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP
+#ifndef CEPO_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP
+#define CEPO_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP
 
 #include "configs/namespace_macro.h"
 #include <type_traits>
 
-CB604BL_CXX11_NAMESPACE_START
+CEPO_NAMESPACE_START
 
 //You can also think of
 //the template operator as a form of overloading
-
-//God bless me
 namespace callable
 {
 	template<typename T>
@@ -32,6 +30,6 @@ namespace callable
 	template<typename T>
 	constexpr bool has_unoverloaded_operator<T>::value;
 }
-CB604BL_CXX11_NAMESPACE_END
+CEPO_NAMESPACE_END
 
-#endif //CB604BL_CXX11_THINGS_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP
+#endif //CEPO_CALLABLE_HAS_UNOVERLOADED_OPERATOR_HPP

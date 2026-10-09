@@ -1,11 +1,11 @@
 //Copyright (c) 2026 CB604BL
-#ifndef CB604BL_CXX11_THINGS_CALLABLE_ARG_TUPLE_HPP
-#define CB604BL_CXX11_THINGS_CALLABLE_ARG_TUPLE_HPP
+#ifndef CEPO_CALLABLE_ARG_TUPLE_HPP
+#define CEPO_CALLABLE_ARG_TUPLE_HPP
 
 #include "configs/namespace_macro.h"
 #include <cstddef>
 
-CB604BL_CXX11_NAMESPACE_START;
+CEPO_NAMESPACE_START;
 
 template<typename... Args>
 class arg_tuple
@@ -43,11 +43,11 @@ public:
 	{
 		static_assert(
 			sizeof...(Args) != 0,
-			"cb604bl::cxx11::arg_tuple::get_type_at: There is no parameter to get");
+			"cepo::arg_tuple::get_type_at: There is no parameter to get");
 
 		static_assert(
 			index < sizeof...(Args),
-			"cb604bl::cxx11::arg_tuple::get_type_at: Out of range");
+			"cepo::arg_tuple::get_type_at: Out of range");
 
 		using type = typename get_type_at_helper<index>::type;
 	};
@@ -56,6 +56,6 @@ public:
 template<typename... Args>
 constexpr std::size_t arg_tuple<Args...>::size;
 
-CB604BL_CXX11_NAMESPACE_END;
+CEPO_NAMESPACE_END;
 
-#endif //CB604BL_CXX11_THINGS_CALLABLE_ARG_TUPLE_HPP
+#endif //CEPO_CALLABLE_ARG_TUPLE_HPP
